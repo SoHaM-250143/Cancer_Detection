@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Patient History - Cancer Detection System{% endblock %}
+{% block body_class %}dashboard-body{% endblock %}
+
+{% block content %}
+<header class="dashboard-header">
+    <nav>
+        <div class="nav-brand">
+            <img src="{{ url_for('static', filename='img/logo13.1.png') }}" alt="Logo">
+            <span>Patient History</span>
+        </div>
+        <div class="nav-user">
+            <span>Welcome, {{ username }}</span>
+            <a href="{{ url_for('dashboard') }}" class="nav-link"><i class="fa fa-dashboard"></i> Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="nav-link logout"><i class="fa fa-sign-out"></i> Logout</a>
+        </div>
+    </nav>
+</header>
+
+<div class="dashboard-container">
+    <main class="main-content">
+        <div class="history-header">
+            <h1>Patient Analysis History</h1>
+            <p>View and manage all previous cancer analysis reports</p>
+        </div>
+
+        {% if histories %}
+        <div class="history-table-container">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Age/Gender</th>
+                        <th>Diagnosis</th>
+                        <th>Stage</th>
+                        <th>Confidence</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in histories %}
+                    <tr>
+                        <td>{{ record.patient_name }}</td>
+                        <td>{{ record.patient_age }}/{{ record.patient_gender }}</td>
+                        <td>{{ record.cnn_prediction }}</td>
+                        <td>
+                            <span class="stage-badge">{{ record.cancer_stage }}</span>
+                        </td>
+                        <td>{{ '%.2f' % (record.cnn_confidence*100) }}%</td>
+                        <td>{{ record.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="no-history">
+            <i class="fa fa-history fa-4x"></i>
+            <h3>No Analysis History</h3>
+            <p>You haven't performed any cancer analysis yet.</p>
+            <a href="{{ url_for('dashboard') }}" class="btn primary">Start Analysis</a>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

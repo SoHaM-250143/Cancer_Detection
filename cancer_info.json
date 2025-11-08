@@ -1,0 +1,82 @@
+{
+    "BloodCancer benign": {
+        "name": "Benign Blood Cancer",
+        "description": "A non-cancerous growth in blood cells that doesn't spread to other parts of the body.",
+        "symptoms": ["Fatigue", "Easy bruising", "Frequent infections", "Unexplained weight loss"],
+        "treatments": ["Regular monitoring", "Blood transfusions", "Medication management"],
+        "survival_rate": "High (95%+)",
+        "risk_factors": ["Family history", "Genetic disorders", "Radiation exposure"]
+    },
+    "BloodCancer malignant": {
+        "name": "Malignant Blood Cancer",
+        "description": "A cancerous growth in blood cells that can spread to other parts of the body.",
+        "symptoms": ["Severe fatigue", "Frequent infections", "Unexplained bleeding", "Bone pain", "Night sweats"],
+        "treatments": ["Chemotherapy", "Radiation therapy", "Stem cell transplant", "Targeted therapy"],
+        "survival_rate": "Varies by type and stage (60-90%)",
+        "risk_factors": ["Chemical exposure", "Radiation", "Certain viruses", "Genetic factors"]
+    },
+    "BrainCancer": {
+        "name": "Brain Cancer",
+        "description": "Abnormal growth of cells in the brain that can be benign or malignant.",
+        "symptoms": ["Headaches", "Seizures", "Vision problems", "Memory loss", "Personality changes"],
+        "treatments": ["Surgery", "Radiation therapy", "Chemotherapy", "Targeted drug therapy"],
+        "survival_rate": "Varies by type (35-90%)",
+        "risk_factors": ["Family history", "Radiation exposure", "Weakened immune system"]
+    },
+    "BreastCancer benign": {
+        "name": "Benign Breast Cancer",
+        "description": "Non-cancerous breast conditions that don't spread to other body parts.",
+        "symptoms": ["Breast lumps", "Pain", "Nipple discharge", "Skin changes"],
+        "treatments": ["Monitoring", "Surgical removal if symptomatic", "Medication"],
+        "survival_rate": "Excellent (99%+)",
+        "risk_factors": ["Hormonal changes", "Family history", "Age"]
+    },
+    "BreastCancer malignant": {
+        "name": "Malignant Breast Cancer",
+        "description": "Cancerous growth in breast tissue that can spread to other organs.",
+        "symptoms": ["Breast lump", "Skin dimpling", "Nipple retraction", "Redness", "Swelling"],
+        "treatments": ["Surgery", "Radiation", "Chemotherapy", "Hormone therapy", "Immunotherapy"],
+        "survival_rate": "Varies by stage (70-99%)",
+        "risk_factors": ["Gender", "Age", "Family history", "Obesity", "Alcohol"]
+    },
+    "KidneyCancer": {
+        "name": "Kidney Cancer",
+        "description": "Cancer that starts in the kidneys, often in the lining of tiny tubes.",
+        "symptoms": ["Blood in urine", "Back pain", "Weight loss", "Fatigue", "Fever"],
+        "treatments": ["Surgery", "Radiation therapy", "Targeted therapy", "Immunotherapy"],
+        "survival_rate": "Varies by stage (50-93%)",
+        "risk_factors": ["Smoking", "Obesity", "High blood pressure", "Family history"]
+    },
+    "LungCancer benign": {
+        "name": "Benign Lung Tumor",
+        "description": "Non-cancerous growth in the lungs that doesn't spread.",
+        "symptoms": ["Cough", "Shortness of breath", "Chest pain", "Wheezing"],
+        "treatments": ["Monitoring", "Surgical removal if needed", "Bronchoscopy"],
+        "survival_rate": "Excellent (98%+)",
+        "risk_factors": ["Inflammation", "Infections", "Environmental factors"]
+    },
+    "LungCancer malignant": {
+        "name": "Malignant Lung Cancer",
+        "description": "Cancerous growth in lung tissue that can spread rapidly.",
+        "symptoms": ["Persistent cough", "Chest pain", "Shortness of breath", "Coughing blood", "Weight loss"],
+        "treatments": ["Surgery", "Chemotherapy", "Radiation", "Targeted therapy", "Immunotherapy"],
+        "survival_rate": "Varies by stage (6-60%)",
+        "risk_factors": ["Smoking", "Radon exposure", "Asbestos", "Air pollution"]
+    },
+    "SkinCancer": {
+        "name": "Skin Cancer",
+        "description": "Abnormal growth of skin cells, often developed on sun-exposed skin.",
+        "symptoms": ["Skin changes", "New growths", "Sores that don't heal", "Changing moles"],
+        "treatments": ["Surgical excision", "Mohs surgery", "Cryotherapy", "Topical treatments"],
+        "survival_rate": "High when detected early (95%+)",
+        "risk_factors": ["UV exposure", "Fair skin", "Family history", "Weakened immune system"]
+    },
+    "Normal": {
+        "name": "Normal/Healthy",
+        "description": "No signs of cancer detected in the analyzed image.",
+        "symptoms": ["None"],
+        "treatments": ["Regular check-ups", "Healthy lifestyle", "Preventive screening"],
+        "survival_rate": "N/A",
+        "risk_factors": ["N/A"]
+    }
+}

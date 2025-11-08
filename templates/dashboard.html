@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cancer Detection System{% endblock %}
+{% block body_class %}dashboard-body{% endblock %}
+
+{% block content %}
+<header class="dashboard-header">
+    <nav>
+        <div class="nav-brand">
+            <img src="{{ url_for('static', filename='img/logo13.1.png') }}" alt="Logo">
+            <span>Cancer Detection System</span>
+        </div>
+        <div class="nav-user">
+            <span>Welcome, {{ username }}</span>
+            {% if is_doctor %}
+            <span class="badge">Doctor</span>
+            {% endif %}
+            <a href="{{ url_for('history') }}" class="nav-link"><i class="fa fa-history"></i> History</a>
+            <a href="{{ url_for('logout') }}" class="nav-link logout"><i class="fa fa-sign-out"></i> Logout</a>
+        </div>
+    </nav>
+</header>
+
+<div class="dashboard-container">
+    <main class="main-content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Analysis Section -->
+        <section class="dashboard-section">
+            <h2>Cancer Analysis</h2>
+            <div class="analysis-card">
+                <h3>Upload Medical Image</h3>
+                <form method="POST" action="{{ url_for('analyze') }}" enctype="multipart/form-data" id="uploadForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Patient Name</label>
+                            <input type="text" name="patient_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" name="patient_age" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="patient_gender" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Medical Image</label>
+                        <input type="file" name="image" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Clinical Notes (Optional)</label>
+                        <textarea name="notes" rows="3" placeholder="Any additional clinical information..."></textarea>
+                    </div>
+
+                    <button type="submit" class="analyze-btn">
+                        <i class="fa fa-search"></i> Analyze Image
+                    </button>
+                </form>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" style="display:none;">
+                <div class="loading-spinner">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <p>Analyzing image... This may take a few moments.</p>
+                </div>
+            </div>
+
+<!-- Results -->
+{% if result %}
+<div class="results-section">
+    <h3>Analysis Results</h3>
+    
+    {% if image_file %}
+    <div class="image-preview">
+        <h4>Uploaded Image:</h4>
+        <img src="{{ url_for('static', filename='uploads/' + image_file) }}" alt="Analyzed Image">
+    </div>
+    {% endif %}
+
+    <div class="prediction">
+        <!-- CNN Prediction with Stage -->
+        <div class="cnn-prediction">
+            <h4>🟢 Primary Diagnosis (CNN Model)</h4>
+            <div class="result-card">
+                <div class="result-main">
+                    <strong>{{ result.cnn_class }}</strong>
+                    <span class="confidence">{{ '%.2f' % (result.cnn_conf*100) }}% Confidence</span>
+                </div>
+                <div class="stage-info">
+                    🎯 <strong>Cancer Stage:</strong> {{ result.cnn_stage }}
+                </div>
+                <button class="info-btn" onclick="showCancerInfo('{{ result.cnn_class }}')">
+                    <i class="fa fa-info-circle"></i> Learn More About This Cancer Type
+                </button>
+            </div>
+        </div>
+
+        <!-- Other Models -->
+        <div class="other-models">
+            <div class="model-group">
+                <h5>🔹 Machine Learning Classifiers</h5>
+                <div class="model-list">
+                    {% for name, pred in result.ml_results.items() %}
+                    <div class="model-item">
+                        <span class="model-name">{{ name }}</span>
+                        <span class="model-pred">{{ pred }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="model-group">
+                <h5>🔸 Ensemble Classifiers</h5>
+                <div class="model-list">
+                    {% for name, pred in result.ens_results.items() %}
+                    <div class="model-item">
+                        <span class="model-name">{{ name }}</span>
+                        <span class="model-pred">{{ pred }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+        </section>
+
+        <!-- Recent History -->
+        <section class="dashboard-section">
+            <h2>Recent Analysis History</h2>
+            {% if recent_history %}
+            <div class="history-grid">
+                {% for record in recent_history %}
+                <div class="history-card">
+                    <div class="history-header">
+                        <h4>{{ record.patient_name }}</h4>
+                        <span class="date">{{ record.created_at.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                    <div class="history-details">
+                        <p><strong>Diagnosis:</strong> {{ record.cnn_prediction }}</p>
+                        <p><strong>Stage:</strong> {{ record.cancer_stage }}</p>
+                        <p><strong>Confidence:</strong> {{ '%.2f' % (record.cnn_confidence*100) }}%</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="no-data">No analysis history yet. Upload an image to get started.</p>
+            {% endif %}
+        </section>
+    </main>
+</div>
+
+<!-- Cancer Info Modal -->
+<div id="cancerModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="cancerInfoContent"></div>
+    </div>
+</div>
+
+<script>
+    // Loading indicator
+    document.getElementById('uploadForm').addEventListener('submit', function() {
+        document.getElementById('loading').style.display = 'block';
+    });
+
+    // Cancer info modal
+    function showCancerInfo(cancerType) {
+        fetch(`/cancer_info/${cancerType}`)
+            .then(response => response.json())
+            .then(data => {
+                const modal = document.getElementById('cancerModal');
+                const content = document.getElementById('cancerInfoContent');
+                
+                content.innerHTML = `
+                    <h2>${data.name || cancerType}</h2>
+                    <p><strong>Description:</strong> ${data.description || 'No information available'}</p>
+                    <p><strong>Symptoms:</strong> ${data.symptoms ? data.symptoms.join(', ') : 'N/A'}</p>
+                    <p><strong>Treatments:</strong> ${data.treatments ? data.treatments.join(', ') : 'N/A'}</p>
+                    <p><strong>Survival Rate:</strong> ${data.survival_rate || 'N/A'}</p>
+                    <p><strong>Risk Factors:</strong> ${data.risk_factors ? data.risk_factors.join(', ') : 'N/A'}</p>
+                `;
+                
+                modal.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error fetching cancer info:', error);
+                alert('Error loading cancer information');
+            });
+    }
+
+    // Close modal
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('cancerModal').style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('cancerModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
